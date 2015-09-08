@@ -7,7 +7,6 @@
 
 import string
 import random
-import sqlite3 # Decided to store encryption data in a file instead of a database
 import os
 
 
@@ -70,7 +69,7 @@ def importreps():
 	'''This is used to import the encryption data and should remain in the program at all times'''
 	with open("encryption1.txt", 'r') as f:
 		for char in f:
-			letterrepresentations.append(char[:-2])
+			letterrepresentations.append(char[:-1])
 def encryptinput(message):
 	'''Used to convert the data into an encrypted format. This calls severl other functions and procedures in
 	order to execute properly'''
@@ -116,6 +115,9 @@ def overalldecryption(sequence):
 
 
 if __name__ == "__main__":
+	if not os.path.exists('encryption1.txt'):
+	   createrep()
+	   writefile()
 	print("Welcome to LWEM. Ensuring your message reach's its destination securely.")
 	importreps()
 	print('''
