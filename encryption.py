@@ -1,21 +1,26 @@
-#!/usr/bin/env python
+#17/05/2015
 #Author: LTW
-#a program to encrypt and decyrption
+#A program to encrypt and decrypt input data.
+
+
 
 
 import string
 import random
-import sqlite3
+import sqlite3 # Decided to store encryption data in a file instead of a database
 import os
 
 
 numberstaken = []
 lettersandnumber = []
-b = 5300
+b = 5200 #Used this to stop me going insane. There is way too many numbers floating around your head when scripting something like this. This just gave me one less thing to worry about.
 letterrepresentations = []
 
 
 def writefile():
+	'''If there is already a file with encrypted reps in, leave this
+	function alone. Otherwise, put it in the program under create reps 
+	and remove it as soon as you have the encryption.txt file.'''
 	with open('encryption1.txt', 'w') as f:
 		for word in letterrepresentations:
 			words = str(word + "\n")
@@ -23,6 +28,10 @@ def writefile():
 
 
 def createrep():
+	'''Use this in conjunction with write file if there is not encrypted .txt file
+	This will create 100 representations for each ascii letter. It should be deleted from
+	the program as soon as there is an encryption file otherwise the program will get confused'''
+
 	for letter in string.ascii_letters:
 		representations = []
 		numberofreps = 0
@@ -42,11 +51,10 @@ def createrep():
 
 
 def letterstonumbers(findnumber):
+	'''This converts decrypted text to a number which can then be used to encrypt the text data'''
 	position = 0
 	i = list(string.ascii_letters[position])
-	while i != list(findnumber):
-		i = list(string.ascii_letters[position])
-		position = position + 1
+	position = string.ascii_letters.find(findnumber) + 1
 	position = position * 100
 	randomsequence = random.randint(position, (position+100))
 	while randomsequence > 5200:
@@ -54,34 +62,37 @@ def letterstonumbers(findnumber):
 	return(int(randomsequence))
 
 def numbertoletters(number):
+	'''This is used to find the letter given to the representation'''
 	numberactual = int((number/100)-1)
 	return(list(string.ascii_letters[numberactual]))
 
 def importreps():
+	'''This is used to import the encryption data and should remain in the program at all times'''
 	with open("encryption1.txt", 'r') as f:
 		for char in f:
 			letterrepresentations.append(char[:-2])
-		print(len(letterrepresentations))
-
 def encryptinput(message):
+	'''Used to convert the data into an encrypted format. This calls severl other functions and procedures in
+	order to execute properly'''
 	listoverallmessage = []
 	overallmessage = str("")
 	for char in list(message):
 		if char not in string.ascii_letters:
 			listoverallmessage.append(char)
-			listoverallmessage.append(",")
+			listoverallmessage.append("$^&")
 		else:
 			listoverallmessage.append(letterrepresentations[letterstonumbers(char)])
-			listoverallmessage.append(",")
+			listoverallmessage.append("$^&")
 	for i in listoverallmessage:
 		overallmessage += str(i)
 	return(overallmessage)
 
 def decryptinput(word):
+	'''Used to return the letter equivelent to the partly decrypted data'''
 	if word == "None":
 		pass
-	elif word == " ":
-		pass
+	elif word in list(string.punctuation) or word in list(string.digits) or word in list(string.whitespace):
+		return word
 	else:
 		position = 0
 		while word != letterrepresentations[position]:
@@ -89,10 +100,11 @@ def decryptinput(word):
 		return (numbertoletters(position))
 
 
-def overalldecryption(words):
+def overalldecryption(sequence):
+	'''Part of the decryption process'''
 	message = []
 	overallmessage = ""
-	splitmessage = words.split(',')
+	splitmessage = sequence.split('$^&')
 	for char in splitmessage:
 		message.append(decryptinput(char))
 	for letter in message:
@@ -103,21 +115,14 @@ def overalldecryption(words):
 	return overallmessage
 
 
-def encrypt(demand):
-	for i in string.ascii_letters:
-		numberletter = random.randint(1, 10000)
-		if numberletter in numberstaken:
-			numberletter = random.randint(1, 10000)
-			numberstaken.append(numberstaken)
-			n = numberletter
-			lettersandnumber.append((i, n))
-
-
 if __name__ == "__main__":
-	print("Welcome to LWEM, here to ensure your message reach's its destination securely.")
+	print("Welcome to LWEM. Ensuring your message reach's its destination securely.")
 	importreps()
-	print('''Would you like to encrypt or decrypt? 
+	print('''
+		Would you like to encrypt or decrypt? 
+
 		(A) encrypt
+
 		(B) decrypt
 		''')
 	answer = input()
@@ -127,12 +132,15 @@ if __name__ == "__main__":
 		print("Here is your encryption:")
 		print(encryptinput(answer2))
 
-	else:
+	elif answer == 'b' or answer == 'B':
 		print("Please enter something to decrypt")
 		answer2 = input()
 		print('''
 			Here is what the message reads:
 			''')
-		print(overalldecryption(answer2[:-1]))
+		print(overalldecryption(answer2[:-3]))
 		print('''''')
+
+	else:
+		print("I'm sorry, I don't believe that was an option. Please try again.")
 
