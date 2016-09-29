@@ -2,19 +2,13 @@
 #Author: LTW
 #A program to encrypt and decrypt input data.
 
-
-
-
 import string
 import random
 import os
 
-
 numberstaken = []
 lettersandnumber = []
-b = 5200 #Used this to stop me going insane. There is way too many numbers floating around your head when scripting something like this. This just gave me one less thing to worry about.
 letterrepresentations = []
-
 
 def writefile():
 	'''If there is already a file with encrypted reps in, leave this
@@ -24,7 +18,6 @@ def writefile():
 		for word in letterrepresentations:
 			words = str(word + "\n")
 			f.write(words)
-
 
 def createrep():
 	'''Use this in conjunction with write file if there is not encrypted .txt file
@@ -70,6 +63,7 @@ def importreps():
 	with open("encryption1.txt", 'r') as f:
 		for char in f:
 			letterrepresentations.append(char[:-1])
+			
 def encryptinput(message):
 	'''Used to convert the data into an encrypted format. This calls severl other functions and procedures in
 	order to execute properly'''
@@ -98,7 +92,6 @@ def decryptinput(word):
 			position = position + 1
 		return (numbertoletters(position))
 
-
 def overalldecryption(sequence):
 	'''Part of the decryption process'''
 	message = []
@@ -112,7 +105,6 @@ def overalldecryption(sequence):
 		except:
 			overallmessage += str(" ")
 	return overallmessage
-
 
 if __name__ == "__main__":
 	if not os.path.exists('encryption1.txt'):
@@ -144,5 +136,5 @@ if __name__ == "__main__":
 		print('''''')
 
 	else:
-		print("I'm sorry, I don't believe that was an option. Please try again.")
+		print("Please try again.")
 
